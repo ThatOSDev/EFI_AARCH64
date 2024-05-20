@@ -24,7 +24,13 @@ https://www.qemu.org/
 *NOTE 3* : Make sure to put the above programs into your windows path.  
   
 *BIOS FOR QEMU*   
-The included "RELEASEAARCH64_QEMU_EFI.fd" file is like my BIOS64.BIN file in videos. These are used for QEMU to load EFI only. No other reason to need these files otherwise. If you ever need to update this file, you can get the QEMU BIOS-like files here. Rename them to BIOS^$.BIN if you want, like I did in my original videos. But make sure the BAT file has the correct name.  
+The included "RELEASEAARCH64_QEMU_EFI.fd" file is like my BIOS64.BIN file in EFI Youtube videos. These are used for QEMU to load EFI only. No other reason to need these files otherwise. If you ever need to update this file, you can get the QEMU BIOS-like files here. Rename them to BIOS^$.BIN if you want, like I did in my original videos. But make sure the BAT file has the correct name.  
 https://github.com/retrage/edk2-nightly  
   
-
+EFI-TUTORIALS YOUTUBE PLAYLIST (x86_64 Based)  
+https://www.youtube.com/watch?v=hkZUd8norFc&list=PLwH94sFU_ljPi2ClIcWIvuc1GdLT81uuH  
+  
+*NOTE 4* : I do want to make a ARM64 EFI tutorial series, I'm just not sure I can yet.  
+  
+  
+  
