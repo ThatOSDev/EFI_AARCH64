@@ -33,5 +33,5 @@ https://www.youtube.com/watch?v=6ogUwvZ-4n4
   
 *NOTE 3* : I do want to make a ARM64 EFI tutorial series, I'm just not sure I can yet.  
   
-  
+*NOTE 4* : Although I tested with 1 Gig Ram, I am under the impression ARM64 requires 4 Gigs. So I updated the BAT file to allow 4 Gigs Ram.  
   
