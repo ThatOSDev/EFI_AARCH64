@@ -13,12 +13,12 @@
   
 *CLANG*  --  Get the 18.1.5 version  
 https://github.com/llvm/llvm-project/releases  
-NOTE :  It's the latest one with the EXE for windows at the time of writing this.  
+CLANG NOTE :  It's the latest one with the EXE for windows at the time of writing this.  
   
 *OSFMount*  -- To mount the drive.hdd file  
 https://www.osforensics.com/tools/mount-disk-images.html  
   
-*QEMU* -- Has an ARM64(AARCH64) Emulation built in. 
+*QEMU* -- Has an ARM64(AARCH64) Emulation built in.  
 https://www.qemu.org/  
  
 *NOTE 3* : Make sure to put the above programs into your windows path.  
