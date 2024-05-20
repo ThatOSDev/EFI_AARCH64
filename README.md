@@ -30,6 +30,9 @@ https://github.com/retrage/edk2-nightly
 EFI-TUTORIALS YOUTUBE PLAYLIST (x86_64 Based)  
 https://www.youtube.com/watch?v=hkZUd8norFc&list=PLwH94sFU_ljPi2ClIcWIvuc1GdLT81uuH  
   
+YOUTUBE DEMONSTRATION FOR ARM64  
+https://www.youtube.com/watch?v=6ogUwvZ-4n4  
+  
 *NOTE 4* : I do want to make a ARM64 EFI tutorial series, I'm just not sure I can yet.  
   
   
