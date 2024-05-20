@@ -7,7 +7,9 @@
 	- STRYKER  
 	- AND ALL OF MY YOUTUBE SUBSCRIBERS  
   
-*NOTE* : This code will compile with CLANG on windows. No other dependancies needed. Currently, there is no way to compile this code with GCC. The GCC Team does have it planned this year to allow compiling for ARM64 for windows users. They are just slow about getting it done.  
+*NOTE 1* : This code will compile with CLANG on windows. No other dependancies needed. Currently, there is no way to compile this code with GCC. The GCC Team does have it planned this year to allow compiling for ARM64 for windows users. They are just slow about getting it done.  
+  
+*NOTE 2* : This code will show green text "Hit any key". However, I couldn't get it to recognize a keystroke from my laptop in QEMU. But, in theory, it should work on a real ARM64 hardware.  
   
 *CLANG*  --  Get the 18.1.5 version  
 https://github.com/llvm/llvm-project/releases  
@@ -19,6 +21,8 @@ https://www.osforensics.com/tools/mount-disk-images.html
 *QEMU* -- Has an ARM64(AARCH64) Emulation built in. 
 https://www.qemu.org/  
  
+*NOTE 3* : Make sure to put the above programs into your windows path.  
+  
 *BIOS FOR QEMU*   
 The included "RELEASEAARCH64_QEMU_EFI.fd" file is like my BIOS64.BIN file in videos. These are used for QEMU to load EFI only. No other reason to need these files otherwise. If you ever need to update this file, you can get the QEMU BIOS-like files here. Rename them to BIOS^$.BIN if you want, like I did in my original videos. But make sure the BAT file has the correct name.  
 https://github.com/retrage/edk2-nightly  
