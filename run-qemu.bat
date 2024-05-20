@@ -1,0 +1,3 @@
+qemu-system-aarch64 -bios RELEASEAARCH64_QEMU_EFI.fd -drive format=raw,unit=0,file=drive/drive.hdd -m 1G -M virt -cpu max -device virtio-gpu-pci -display sdl -boot menu=on,splash-time=0
+
+pause
