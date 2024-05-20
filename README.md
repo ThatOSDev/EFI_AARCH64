@@ -35,3 +35,5 @@ https://www.youtube.com/watch?v=6ogUwvZ-4n4
   
 *NOTE 4* : Although I tested with 1 Gig Ram, I am under the impression ARM64 requires 4 Gigs. So I updated the BAT file to allow 4 Gigs Ram.  
   
+*NOTE 5* : QEMU has emulation built in for ARM64, however VirtualBox does NOT. So it will not emulate ARM64 Architecture.  
+  
