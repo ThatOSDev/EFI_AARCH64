@@ -37,3 +37,7 @@ https://www.youtube.com/watch?v=6ogUwvZ-4n4
   
 *NOTE 5* : QEMU has emulation built in for ARM64, however VirtualBox does NOT. So it will not emulate ARM64 Architecture.  
   
+*NOTE 6* : ARM PDF Documentation has been put into the HOLD folder. Grab it while you can. Github complains about it's size.  
+  
+  
+  
