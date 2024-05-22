@@ -40,4 +40,5 @@ https://www.youtube.com/watch?v=6ogUwvZ-4n4
 *NOTE 6* : ARM PDF Documentation has been put into the HOLD folder. Grab it while you can. Github complains about it's size.  
   
   
+![Current Progress](progress.png) 
   
