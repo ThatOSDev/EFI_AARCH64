@@ -7,6 +7,9 @@
 	- STRYKER  
 	- AND ALL OF MY YOUTUBE SUBSCRIBERS  
   
+YOUTUBE VIDEO  
+https://www.youtube.com/watch?v=taGEU9X0eWo  
+  
 *NOTE 1* : This code will compile with CLANG on windows. No other dependancies needed. Currently, there is no way to compile this code with GCC. The GCC Team does have it planned this year to allow compiling for ARM64 for windows users. They are just slow about getting it done.  
   
 *CLANG*  --  Get the 18.1.5 version  
