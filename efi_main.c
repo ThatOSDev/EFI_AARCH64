@@ -1,6 +1,8 @@
 // UEFI From Scratch for AARCH64 - ThatOSDev ( 2024 )
 // https://github.com/ThatOSDev/EFI_AARCH64
 
+// NOTE : Attempt Tut 14
+
 #include "efi.h"
 #include "ErrorCodes.h"
 #include "efilibs.h"
