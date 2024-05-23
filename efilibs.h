@@ -57,7 +57,8 @@ void HitAnyKey(void)
     EFI_INPUT_KEY Key;
 
     // In a while loop to see if the keyboard has a key stroke in the buffer.
-    while((SystemTable->ConIn->ReadKeyStroke(SystemTable->ConIn, &Key)) == EFI_NOT_READY);
+	// Added the __asm__("wfi\n\t"); code to slow the CPU down.
+    while((SystemTable->ConIn->ReadKeyStroke(SystemTable->ConIn, &Key)) == EFI_NOT_READY) {__asm__("wfi\n\t");};
 }
 
 // This sets the color of the pixels ( Graphics Color )
