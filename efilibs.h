@@ -6,6 +6,8 @@
 
 #include "clib.h"
 
+#define HEX 16
+
 #define MAX_LENGTH 22
 
              // ARGB             
@@ -25,6 +27,7 @@ EFI_GRAPHICS_OUTPUT_PROTOCOL    *gop;
 EFI_SIMPLE_FILE_SYSTEM_PROTOCOL *Volume;
 EFI_FILE_PROTOCOL               *RootFS;
 EFI_GRAPHICS_OUTPUT_BLT_PIXEL    GraphicsColor;  // Public Variable for now.
+void* OSBuffer_Handle;
 
 uint32_t DisplayWidth  = 0;
 uint32_t DisplayHeight = 0;
@@ -213,6 +216,27 @@ void HitAnyKey(void)
     while((SystemTable->ConIn->ReadKeyStroke(SystemTable->ConIn, &Key)) == EFI_NOT_READY) {__asm__("wfi\n\t");};
 }
 
+void ResetKeyboard(void)
+{
+    SystemTable->ConIn->Reset(SystemTable->ConIn, 1);
+}
+
+EFI_INPUT_KEY CheckKeystroke;
+BOOLEAN GetKey(CHAR16 key)
+{
+    if(CheckKeystroke.UnicodeChar == key)
+    {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+EFI_STATUS CheckKey(void)
+{
+    return SystemTable->ConIn->ReadKeyStroke(SystemTable->ConIn, &CheckKeystroke);
+}
+
 void Delay(uint64_t d)
 {
     // The Stall function is set as microseconds.
@@ -222,6 +246,26 @@ void Delay(uint64_t d)
 void SetTextColor(uint64_t color)
 {
 	SystemTable->ConOut->SetAttribute(SystemTable->ConOut, color);
+}
+
+void COLD_REBOOT(void)
+{
+    // Hardware Reboot
+    SystemTable->RuntimeServices->ResetSystem(EfiResetCold, EFI_SUCCESS, 0, 0);
+}
+
+void WARM_REBOOT(void)
+{
+    // Software reboot
+    SystemTable->RuntimeServices->ResetSystem(EfiResetWarm, EFI_SUCCESS, 0, 0);
+}
+
+void SHUTDOWN(void)
+{
+    // Shuts off the computer
+    // NOTE : This does not work in VirtualBox.
+    // WORKS in QEMU !!!
+    SystemTable->RuntimeServices->ResetSystem(EfiResetShutdown, EFI_SUCCESS, 0, 0);
 }
 
 // This sets the color of the pixels ( Graphics Color )
@@ -250,13 +294,133 @@ void CreateFilledBox(UINT32 xPos, UINT32 yPos, UINT32 w, UINT32 h)
     gop->Blt(gop, &GraphicsColor, EfiBltVideoFill, 0, 0, xPos, yPos, w, h, 0);
 }
 
+void InitializeGOP(void)
+{
+    SetTextColor(EFI_BROWN);
+    wprintf(L"\r\n\r\nLoading Graphics Output Protocol ... ");
+    EFI_STATUS Status = SystemTable->BootServices->LocateProtocol(&EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID, 0, (void**)&gop);
+    SetTextColor(EFI_CYAN);
+    wprintf(CheckStandardEFIError(Status));
+	
+	DisplayWidth  = gop->Mode->Info->HorizontalResolution;
+	DisplayHeight = gop->Mode->Info->VerticalResolution;
+}
+
+void InitializeFILESYSTEM(void)
+{
+    EFI_STATUS Status;
+    // To load a file, you must have a file system. EFI takes advantage of the FAT32 file system.
+    SetTextColor(EFI_BROWN);
+    wprintf(L"LoadedImage ... ");
+    EFI_LOADED_IMAGE_PROTOCOL *LoadedImage;
+    Status = SystemTable->BootServices->HandleProtocol(ImageHandle, &EFI_LOADED_IMAGE_PROTOCOL_GUID, (void**)&LoadedImage);
+    SetTextColor(EFI_CYAN);
+    wprintf(CheckStandardEFIError(Status));
+    
+    SetTextColor(EFI_BROWN);
+    wprintf(L"DevicePath ... ");
+    EFI_DEVICE_PATH_PROTOCOL *DevicePath;
+    Status = SystemTable->BootServices->HandleProtocol(LoadedImage->DeviceHandle, &EFI_DEVICE_PATH_PROTOCOL_GUID, (void**)&DevicePath);
+    SetTextColor(EFI_CYAN);
+    wprintf(CheckStandardEFIError(Status));
+    
+    SetTextColor(EFI_BROWN);
+    wprintf(L"Volume ... ");
+    Status = SystemTable->BootServices->HandleProtocol(LoadedImage->DeviceHandle, &EFI_SIMPLE_FILE_SYSTEM_PROTOCOL_GUID, (void**)&Volume);
+    SetTextColor(EFI_CYAN);
+    wprintf(CheckStandardEFIError(Status));
+}
+
+EFI_FILE_PROTOCOL* openFile(CHAR16* FileName)
+{
+    // This opens a file from the EFI FAT32 file system volume.
+    // It loads from root, so you must supply full path if the file is not in the root.
+    // Example : "somefolder//myfile"  <--- Notice the double forward slash.
+    EFI_STATUS Status;
+    SetTextColor(EFI_BROWN);
+    wprintf(L"RootFS ... ");
+    EFI_FILE_PROTOCOL* RootFS;
+    Status = Volume->OpenVolume(Volume, &RootFS);
+    SetTextColor(EFI_CYAN);
+    wprintf(CheckStandardEFIError(Status));
+    
+    SetTextColor(EFI_BROWN);
+    wprintf(L"Opening File ... ");
+    EFI_FILE_PROTOCOL* FileHandle = NULL;
+    Status = RootFS->Open(RootFS, &FileHandle, FileName, 0x0000000000000001, 0);
+    SetTextColor(EFI_CYAN);
+    wprintf(CheckStandardEFIError(Status));
+    
+    return FileHandle;
+}
+
+void closeFile(EFI_FILE_PROTOCOL* FileHandle)
+{
+    // This closes the file.
+    EFI_STATUS Status;
+    SetTextColor(EFI_BROWN);
+    wprintf(L"Closing File ... ");
+    Status = FileHandle->Close(FileHandle);
+    SetTextColor(EFI_CYAN);
+    wprintf(CheckStandardEFIError(Status));
+}
+
+void readFile(CHAR16* FileName)
+{
+	EFI_STATUS Status = 0;
+    EFI_FILE_PROTOCOL* mytextfile = openFile(FileName);
+    if(mytextfile != NULL)
+    {
+        SetTextColor(EFI_BROWN);
+        wprintf(L"AllocatingPool ... ");
+        Status = SystemTable->BootServices->AllocatePool(EfiLoaderData, 0x00001000, (void**)&OSBuffer_Handle);
+        SetTextColor(EFI_CYAN);
+        wprintf(CheckStandardEFIError(Status));
+    
+        UINT64 fileSize = 0x00001000;
+        
+        SetTextColor(EFI_BROWN);
+        wprintf(L"Reading File ... ");
+        Status = mytextfile->Read(mytextfile, &fileSize, OSBuffer_Handle);
+        SetTextColor(EFI_CYAN);
+        wprintf(CheckStandardEFIError(Status));
+
+        closeFile(mytextfile);
+    }
+}
+
 void InitEFI(EFI_HANDLE handle, EFI_SYSTEM_TABLE  *table)
 {
 	ImageHandle   = handle;
 	SystemTable   = table;
 	ERROR_STATUS  = 0;
 	ResetScreen();
+
+    SetTextColor(EFI_WHITE);
+    wprintf(u"EFI loaded on AARCH64 Hardware !\r\n\r\n");
+    
+    SetTextColor(EFI_GREEN);
+    wprintf(u"Hit Any Key to see Graphics and setup the FileSystem.");
+
+    HitAnyKey();
+	
+	SetTextPosition(0, 5);
+
+	InitializeFILESYSTEM();
+
+	InitializeGOP();
+	
+	SetGraphicsColor(ORANGE);
+	CreateFilledBox(50, 50, 100, 200);
+	SetGraphicsColor(RED);
+	CreateFilledBox(60, 60, 80, 30);
+	SetTextPosition(0, 8);
+	SetTextColor(EFI_YELLOW);
+	wprintf(u"We have Graphics !!");
+
 	SetTextColor(EFI_GREEN);
+	
+	SetTextPosition(0, 11);
 }
 
 #endif // EFILIBS_H

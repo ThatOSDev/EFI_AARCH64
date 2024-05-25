@@ -1,60 +1,58 @@
 // UEFI From Scratch for AARCH64 - ThatOSDev ( 2024 )
 // https://github.com/ThatOSDev/EFI_AARCH64
 
-// NOTE : Attempt Tut 14
-
 #include "efi.h"
 #include "ErrorCodes.h"
 #include "efilibs.h"
 
-// This is like int main() in a typical C program.
-// In this case, we create an ImageHandle for the overall EFI interface,
-// as well as a System Table pointer to the EFI_SYSTEM_TABLE struct.
 EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system)
 {
 	InitEFI(image, system);
-    
-    SetTextColor(EFI_WHITE);
-    SetTextPosition(10, 2);
-    wprintf(u"EFI loaded on AARCH64 Hardware !\r\n\r\n");
-    
-    SetTextColor(EFI_GREEN);
-    SetTextPosition(10, 4);
-    wprintf(u"Hit Any Key to see Graphics");
 
-    HitAnyKey();
+    void* ExternalFileBuffer;
+
+    EFI_FILE_PROTOCOL* efimyfile = openFile(L"testfile.bin");
+
+    UINT64 fsize = 0x00001000;
+    EFI_STATUS Status = SystemTable->BootServices->AllocatePool(EfiLoaderData, fsize, (void**)&ExternalFileBuffer);
+	SetTextColor(EFI_BROWN);
+    wprintf(u"AllocatePool ExternalFileBuffer");
+	SetTextColor(EFI_LIGHTCYAN);  
+    wprintf(CheckStandardEFIError(Status));
+
+    efimyfile->SetPosition(efimyfile, 0);
     
-	SetTextPosition(10, 6);
-    wprintf(u"Loading Graphics Output Protocol ... ");
-    EFI_STATUS Status = SystemTable->BootServices->LocateProtocol(&EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID, 0, (void**)&gop);
-    if(Status == EFI_SUCCESS)
+    efimyfile->Read(efimyfile, &fsize, ExternalFileBuffer);
+    SetTextColor(EFI_GREEN);
+    wprintf(u"\r\nRead ExternalFileBuffer");
+	SetTextColor(EFI_LIGHTCYAN);  
+    wprintf(CheckStandardEFIError(Status));
+
+    SetTextColor(EFI_LIGHTCYAN);    
+    wprintf(u"\r\nFile Signature\r\n");
+    SetTextColor(EFI_LIGHTRED);    
+    UINT8* test = (UINT8*)ExternalFileBuffer;
+
+    for(int m = 0; m < 5; m++)
     {
-        SetTextColor(EFI_CYAN);
-        wprintf(CheckStandardEFIError(Status));
-        SetGraphicsColor(ORANGE);
-        CreateFilledBox(50, 50, 100, 200);
-        SetGraphicsColor(RED);
-        CreateFilledBox(60, 60, 80, 30);
-        SetTextColor(EFI_YELLOW);
-        SetTextPosition(10, 8);
-        wprintf(u"We have Graphics !!");
-    } else {
-        SetTextColor(EFI_RED);
-        wprintf(CheckStandardEFIError(Status));
+        int j = *test;
+        wprintf(u" %x", j);
+        test++;
     }
-
+    
     SetTextColor(EFI_GREEN);
-    SetTextPosition(2, 10);
-    wprintf(u"Hit Any Key");
+    SetTextPosition(10, 20);
+    wprintf(u"Hit Any Key to shutdown");
 
     HitAnyKey();
 	
+	SHUTDOWN();
+	
     SetTextColor(EFI_GREEN);
-    SetTextPosition(2, 10);
-    wprintf(u"Halting the CPU, you can shut this off now.");
+    SetTextPosition(0, 22);
+    wprintf(u"If you see this, something went wrong. Manually turn off the computer.");
 	
 	while(1){__asm__("wfi\n\t");}   // WFI is similar to the HLT in x86_64
 
-    // The EFI needs to have a 0 ( or EFI_SUCCESS ) in order to know everything is ok.
     return EFI_SUCCESS;
 }

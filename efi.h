@@ -156,6 +156,27 @@ typedef enum EFI_GRAPHICS_PIXEL_FORMAT
     PixelFormatMax
 } EFI_GRAPHICS_PIXEL_FORMAT;
 
+typedef enum EFI_MEMORY_TYPE
+{
+    EfiReservedMemoryType,
+    EfiLoaderCode,
+    EfiLoaderData,
+    EfiBootServicesCode,
+    EfiBootServicesData,
+    EfiRuntimeServicesCode,
+    EfiRuntimeServicesData,
+    EfiConventionalMemory,
+    EfiUnusableMemory,
+    EfiACPIReclaimMemory,
+    EfiACPIMemoryNVS,
+    EfiMemoryMappedIO,
+    EfiMemoryMappedIOPortSpace,
+    EfiPalCode,
+    EfiPersistentMemory,
+    EfiUnacceptedMemoryType,
+    EfiMaxMemoryType
+} EFI_MEMORY_TYPE;
+
 
 // STRUCTS
 typedef struct EFI_TIME
@@ -275,7 +296,9 @@ typedef struct EFI_PIXEL_BITMASK
 // The GUID to set the correct Protocol.
 struct EFI_GUID EFI_GRAPHICS_OUTPUT_PROTOCOL_GUID    = {0x9042a9de, 0x23dc, 0x4a38, {0x96, 0xfb, 0x7a, 0xde, 0xd0, 0x80, 0x51, 0x6a}};
 struct EFI_GUID EFI_FILE_INFO_GUID                   = {0x09576e92, 0x6d3f, 0x11d2, {0x8e, 0x39, 0x00, 0xa0, 0xc9, 0x69, 0x72, 0x3b}};
+struct EFI_GUID EFI_LOADED_IMAGE_PROTOCOL_GUID       = {0x5b1b31a1,  0x9562, 0x11d2, {0x8e, 0x3f, 0x00, 0xa0, 0xc9, 0x69, 0x72, 0x3b}};
 struct EFI_GUID EFI_SIMPLE_FILE_SYSTEM_PROTOCOL_GUID = {0x964e5b22, 0x6459, 0x11d2, {0x8e, 0x39, 0x00, 0xa0, 0xc9, 0x69, 0x72, 0x3b}};
+struct EFI_GUID EFI_DEVICE_PATH_PROTOCOL_GUID        = {0x09576e91,  0x6d3f, 0x11d2, {0x8e, 0x39, 0x00, 0xa0, 0xc9, 0x69, 0x72, 0x3b}};
 
 // We check for the event.
 typedef void(*EFI_EVENT_NOTIFY)(EFI_EVENT Event, void *Context);
@@ -474,9 +497,6 @@ typedef struct EFI_RUNTIME_SERVICES
     EFI_QUERY_VARIABLE_INFO             QueryVariableInfo;
 } EFI_RUNTIME_SERVICES;
 
-// EFI has a system and runtime. This system table is the first struct
-// called from the main section. Think of it as the entry point
-// to all of the EFI functions.
 typedef struct EFI_SYSTEM_TABLE
 {
 	EFI_TABLE_HEADER                              hdr;
@@ -493,6 +513,20 @@ typedef struct EFI_SYSTEM_TABLE
 	UINTN                                         NumberOfTableEntries;
 	EFI_CONFIGURATION_TABLE                       *ConfigurationTable;
 } EFI_SYSTEM_TABLE;
+
+typedef struct EFI_LOADED_IMAGE_PROTOCOL
+{
+    UINT32                      Revision;
+    EFI_HANDLE                  ParentHandle;
+    EFI_SYSTEM_TABLE            *SystemTable;
+    EFI_HANDLE                  DeviceHandle;
+    EFI_DEVICE_PATH_PROTOCOL    *FilePath;
+    void                        *Reserved;
+    UINT32                      LoadOptionsSize;
+    void                        *LoadOptions;
+    void                        *ImageBase;
+    UINT64                      ImageSize;
+} EFI_LOADED_IMAGE_PROTOCOL;
 
 
 // GRAPHICS
