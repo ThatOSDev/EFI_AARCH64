@@ -29,14 +29,14 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system)
     wprintf(CheckStandardEFIError(Status));
 
     SetTextColor(EFI_LIGHTCYAN);    
-    wprintf(u"\r\nFile Signature\r\n");
+    wprintf(u"\r\nFirst 5 Bytes\r\n");
     SetTextColor(EFI_LIGHTRED);    
     UINT8* test = (UINT8*)ExternalFileBuffer;
 
     for(int m = 0; m < 5; m++)
     {
         int j = *test;
-        wprintf(u" %x", j);
+        wprintf(u"%x ", j);
         test++;
     }
     
