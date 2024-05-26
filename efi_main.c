@@ -11,7 +11,7 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system)
 
     void* ExternalFileBuffer;
 
-    EFI_FILE_PROTOCOL* efimyfile = openFile(L"testfile.bin");
+    EFI_FILE_PROTOCOL* efimyfile = openFile(u"testfile.bin");
 
     UINT64 fsize = 0x00001000;
     EFI_STATUS Status = SystemTable->BootServices->AllocatePool(EfiLoaderData, fsize, (void**)&ExternalFileBuffer);
