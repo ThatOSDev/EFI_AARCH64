@@ -39,6 +39,8 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system)
         wprintf(u"%x ", j);
         test++;
     }
+	
+	efimyfile->SetPosition(efimyfile, 0);
     
     SetTextColor(EFI_GREEN);
     SetTextPosition(10, 20);
