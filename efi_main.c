@@ -42,6 +42,25 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system)
     
     SetTextColor(EFI_GREEN);
     SetTextPosition(10, 20);
+    wprintf(u"Hit Any Key to execute testfile");
+
+    HitAnyKey();
+	
+	SetGraphicsColor(BLACK);
+	
+	CreateFilledBox(150, 150, 800, 500);
+	
+	SetGraphicsColor(ORANGE);
+	
+	// Execute File, get return number --> 349587 \ 055593
+	int (*KernelBinFile)(void) = ((__attribute__((ms_abi)) int (*)(void) ) (UINT8*)ExternalFileBuffer);
+    int g = KernelBinFile();
+
+    SetTextColor(EFI_LIGHTMAGENTA);	
+    wprintf(u"\r\n\r\nThe returned number is : %d", g);
+
+    SetTextColor(EFI_GREEN);
+    SetTextPosition(10, 13);
     wprintf(u"Hit Any Key to shutdown");
 
     HitAnyKey();
