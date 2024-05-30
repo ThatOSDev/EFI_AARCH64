@@ -12,7 +12,7 @@
 YOUTUBE VIDEO  
 https://www.youtube.com/watch?v=taGEU9X0eWo  
   
-*NOTE 2* : This code will compile with CLANG on windows. No other dependancies needed. Currently, there is no way to compile this code with GCC. The GCC Team does have it planned this year to allow compiling for ARM64 for windows users. They are just slow about getting it done.  
+*NOTE 2* : This code will compile with CLANG on windows. It loads a file, and then executes that loaded file giving a return number. (Scroll down to see the screenshots.) No other dependancies needed. Currently, there is no way to compile this code with GCC. The GCC Team does have it planned this year to allow compiling for ARM64 for windows users. They are just slow about getting it done.  
   
 *CLANG*  --  Get the 18.1.5 version  
 https://github.com/llvm/llvm-project/releases  
@@ -44,5 +44,7 @@ https://www.youtube.com/watch?v=6ogUwvZ-4n4
   
 *NOTE 7* : ARM PDF Documentation has been put into the HOLD folder. Grab it while you can. Github complains about it's size.  
   
-![Current Progress](progress.png) 
+![Current Progress](progress1.png)  
+  
+![Current Progress](progress2.png)  
   
