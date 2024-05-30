@@ -9,12 +9,14 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system)
 {
 	InitEFI(image, system);
 
-    void* ExternalFileBuffer;
+    EFI_PHYSICAL_ADDRESS ExternalFileBuffer = 0;
 
     EFI_FILE_PROTOCOL* efimyfile = openFile(u"EFI\\Boot\\testfile.bin");
 
     UINT64 fsize = 0x00001000;
-    EFI_STATUS Status = SystemTable->BootServices->AllocatePool(EfiLoaderData, fsize, (void**)&ExternalFileBuffer);
+
+    EFI_STATUS Status = SystemTable->BootServices->AllocatePages(AllocateAnyPages, EfiLoaderCode, 1, &ExternalFileBuffer);
+
 	SetTextColor(EFI_BROWN);
     wprintf(u"AllocatePool ExternalFileBuffer");
 	SetTextColor(EFI_LIGHTCYAN);  
@@ -22,7 +24,8 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system)
 
     efimyfile->SetPosition(efimyfile, 0);
     
-    efimyfile->Read(efimyfile, &fsize, ExternalFileBuffer);
+    efimyfile->Read(efimyfile, &fsize, (void *)ExternalFileBuffer);
+
     SetTextColor(EFI_GREEN);
     wprintf(u"\r\nRead ExternalFileBuffer");
 	SetTextColor(EFI_LIGHTCYAN);  
@@ -55,7 +58,8 @@ EFI_STATUS efi_main(EFI_HANDLE image, EFI_SYSTEM_TABLE *system)
 	SetGraphicsColor(ORANGE);
 	
 	// Execute File, get return number --> 349587 \ 055593
-	int (*KernelBinFile)(void) = ((__attribute__((ms_abi)) int (*)(void) ) (UINT8*)ExternalFileBuffer);
+	int (*KernelBinFile)(void) = (int (*)(void)) ((UINT8 *)ExternalFileBuffer);
+
     int g = KernelBinFile();
 
     SetTextColor(EFI_LIGHTMAGENTA);	

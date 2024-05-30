@@ -44,8 +44,5 @@ https://www.youtube.com/watch?v=6ogUwvZ-4n4
   
 *NOTE 7* : ARM PDF Documentation has been put into the HOLD folder. Grab it while you can. Github complains about it's size.  
   
-*NOTE 8* : Executing the loaded testfile still does not work, yet.  
-  
-  
 ![Current Progress](progress.png) 
   
