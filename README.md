@@ -10,7 +10,7 @@
 	- AND ALL OF MY YOUTUBE SUBSCRIBERS  
   
 YOUTUBE VIDEO  
-https://www.youtube.com/watch?v=taGEU9X0eWo  
+https://www.youtube.com/watch?v=lU-saMCMVfw  
   
 *NOTE 2* : This code will compile with CLANG on windows. It loads a file, and then executes that loaded file giving a return number. (Scroll down to see the screenshots.) No other dependancies needed. Currently, there is no way to compile this code with GCC. The GCC Team does have it planned this year to allow compiling for ARM64 for windows users. They are just slow about getting it done.  
   
